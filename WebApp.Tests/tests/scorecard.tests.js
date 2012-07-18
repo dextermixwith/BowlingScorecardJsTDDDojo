@@ -1,3 +1,4 @@
-test("Edit button selected test", function () {
-	ok(true, "edit button link is selected from row");
+/// <reference path="../../WebApp/assets/js/scorecard.js" />
+test("Creating a scorecard has current score value of 0", function () {
+	equal(new ScoreCard().CurrentScore, 0, "Current Score Should be 0");
 });

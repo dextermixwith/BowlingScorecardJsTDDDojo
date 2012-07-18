@@ -1,0 +1,5 @@
+C:\dev\BowlingScorecardJsTDDDojo\WebApp.Tests\bin\Debug\WebApp.Tests.dll
+C:\dev\BowlingScorecardJsTDDDojo\WebApp.Tests\bin\Debug\WebApp.Tests.pdb
+C:\dev\BowlingScorecardJsTDDDojo\WebApp.Tests\obj\Debug\ResolveAssemblyReference.cache
+C:\dev\BowlingScorecardJsTDDDojo\WebApp.Tests\obj\Debug\WebApp.Tests.dll
+C:\dev\BowlingScorecardJsTDDDojo\WebApp.Tests\obj\Debug\WebApp.Tests.pdb
