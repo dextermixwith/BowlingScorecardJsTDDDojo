@@ -1,14 +1,17 @@
 /// <reference path="../../WebApp/assets/js/scorecard.js" />
 
-var scorecardTableNodeCollection = $('<table class="scorecardTable"><thead><tr><th colspan="2">1</th></tr></thead><tbody><tr><td>-</td><td>-</td></tr><tr><td class="turnScore" colspan="2">-</td></tr></tbody></table>');
+var scorecardTableNodeCollection = $('<table />');
 
-var stubbedJQuery;
+var stubbedJQuery, turnScoreCellSelectionResultStub, stubTurnScoreClickEventHandler;
 var scorecard;
 
 module("Score Card Initialisation", {
 	setup : function() {
 		stubbedJQuery = sinon.stub();
-		scorecard = new ScoreCard(scorecardTableNodeCollection, stubbedJQuery);		
+		turnScoreCellSelectionResultStub = sinon.stub( { on : function() {} } );
+		stubTurnScoreClickEventHandler = sinon.stub();
+		stubbedJQuery.withArgs("td.turnScore").returns(turnScoreCellSelectionResultStub);
+		scorecard = new ScoreCard(scorecardTableNodeCollection, stubbedJQuery, stubTurnScoreClickEventHandler);		
 	}
 });
 
@@ -19,5 +22,9 @@ test("Creating a scorecard has current turn set to 1", function () {
 
 test("Turn score cells are selection test", function() {
 	ok(stubbedJQuery.calledWith("td.turnScore"), "turn score cells in table are selected.");
+});
+
+test("Turn score cell click handler attachment test", function() {
+	ok(turnScoreCellSelectionResultStub.on.calledWith("click", stubTurnScoreClickEventHandler), "turn score cells have had 'on' method used to attach click events");
 });
 
