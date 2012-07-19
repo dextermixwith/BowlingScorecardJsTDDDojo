@@ -3,7 +3,6 @@
     this.initialiseRows(rowNodeCollection);
 };
 
-
 EditablePushNotificationRegistrationRow.prototype = {
     initialiseRows: function (rowNodeCollection) {
         this.internalJQuery('a[name="edit"]', rowNodeCollection).click(function () { });

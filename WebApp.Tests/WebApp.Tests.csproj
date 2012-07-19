@@ -44,6 +44,8 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="sinon\sinon-1.4.2.js" />
+    <Content Include="tests\pushregistrations.tests.js" />
     <Content Include="tests\scorecard.tests.js" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
