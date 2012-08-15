@@ -13,4 +13,6 @@
 	font-weight: bold;
 	background-color: gainsboro;
 }
-
+.turnInput {
+	width: 20px;
+}
