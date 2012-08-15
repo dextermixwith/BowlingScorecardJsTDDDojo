@@ -1,8 +1,12 @@
-var ScoreCard = function (scoreCardTableNode, internalJQuery, injectedTurnScoreClickEventHandler, injectedJQueryForProxy) {
+var ScoreCard = function (scoreCardTableNode, internalJQuery, injectedTurnScoreClickEventHandler, 
+                    injectedJQueryForProxy, injectedTurnBlurHandler, injectedTurnKeydownHandler) {
     this.CurrentTurn = 1;
     this.internalJQuery = internalJQuery || $;
     this.jQueryForProxying = injectedJQueryForProxy || $;
     this.turnScoreClickEventHandler = injectedTurnScoreClickEventHandler || this.turnScoreClickEventHandler ;
+    this.turnScoreBlurHandler = injectedTurnBlurHandler || this.turnScoreBlurHandler;
+    this.turnKeydownHandler = injectedTurnKeydownHandler || this.turnKeydownHandler;
+
     this.initialiseTable(scoreCardTableNode);
 };
 
@@ -13,8 +17,8 @@ ScoreCard.prototype = {
     },
     turnScoreClickEventHandler : function(event) {
         var turnInlineInput = this.internalJQuery('<input type="text" class="turnInput" maxlength="1" />');
-        turnInlineInput.on("blur", function(){});
-        turnInlineInput.on("keydown", function(){})
+        turnInlineInput.on("blur", this.jQueryForProxying.proxy(this.turnScoreBlurHandler, this));
+        turnInlineInput.on("keydown", this.jQueryForProxying.proxy(this.turnKeydownHandler, this))
         this.internalJQuery(event.currentTarget).empty();
     	this.internalJQuery(event.currentTarget).append(turnInlineInput);
         turnInlineInput.trigger("focus");

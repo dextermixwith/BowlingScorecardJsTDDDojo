@@ -34,7 +34,7 @@ test("The turn score cell event click proxy test", function() {
 	ok(stubbedJQueryProxy.proxy.calledWith(stubTurnScoreClickEventHandler), "The turn score cell event click handler is proxied by jQuery");
 });
 
-var clickEvent, injectedJQueryForProxy, currentTurnCellStub, turnInlineInputStub;
+var clickEvent, injectedJQueryForProxy, currentTurnCellStub, turnInlineInputStub, stubTurnScoreBlurEventHandler;
 
 module("Score Card Turn Click", {
 	setup : function() {
@@ -42,9 +42,9 @@ module("Score Card Turn Click", {
 		turnInlineInputStub = sinon.stub({ on : function() {}, trigger : function() {} });
 		clickEvent = sinon.stub({ currentTarget : currentTurnCellStub });	
 		turnScoreCellSelectionResultStub = sinon.stub( { 
-												append : function() {}, 
-												on : function() {} , 
-												empty : function() {},
+												append : function() { }, 
+												on : function() { } , 
+												empty : function() { },
 
 											});
 		
@@ -53,7 +53,12 @@ module("Score Card Turn Click", {
 		stubbedJQuery.withArgs(currentTurnCellStub).returns(turnScoreCellSelectionResultStub);
 		stubbedJQuery.withArgs('<input type="text" class="turnInput" maxlength="1" />').returns(turnInlineInputStub);
 
-		scorecard = new ScoreCard(scorecardTableNodeCollection, stubbedJQuery).turnScoreClickEventHandler(clickEvent);	
+		stubTurnScoreBlurEventHandler = function () {};
+		stubTurnScoreKeydownEventHandler = function () {};
+
+		stubbedJQueryProxy = sinon.stub({ proxy: function() {} });
+
+		scorecard = new ScoreCard(scorecardTableNodeCollection, stubbedJQuery, null, stubbedJQueryProxy, stubTurnScoreBlurEventHandler, stubTurnScoreKeydownEventHandler).turnScoreClickEventHandler(clickEvent);	
 	}
 });
 
@@ -87,4 +92,12 @@ test("Turn cell input focus loss event attachment tests", function() {
 
 test("Turn cell input keydown event attachment tests", function() {
 	ok(turnInlineInputStub.on.calledWith("keydown"));
+});
+
+test("The turn score blur proxy test", function() {
+	ok(stubbedJQueryProxy.proxy.calledWith(stubTurnScoreBlurEventHandler), "The turn score cell event blur handler is proxied by jQuery");
+});
+
+test("The turn score keydown proxy test", function() {
+	ok(stubbedJQueryProxy.proxy.calledWith(stubTurnScoreKeydownEventHandler), "The turn score cell event keydown handler is proxied by jQuery");
 });
