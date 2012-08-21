@@ -16,7 +16,7 @@ ScoreCard.prototype = {
    			.on("click", this.jQueryForProxying.proxy(this.turnScoreClickEventHandler, this));
     },
     turnScoreClickEventHandler : function(event) {
-        var turnScore = this.internalJQuery(event.currentTarget).val();
+        var turnScore = this.internalJQuery(event.currentTarget).html();
         var turnInlineInput = this.internalJQuery('<input type="text" class="turnInput" maxlength="1" value="' + turnScore + '" />');
         turnInlineInput.on("blur", this.jQueryForProxying.proxy(this.turnScoreBlurHandler, this));
         turnInlineInput.on("keydown", this.jQueryForProxying.proxy(this.turnKeydownHandler, this));

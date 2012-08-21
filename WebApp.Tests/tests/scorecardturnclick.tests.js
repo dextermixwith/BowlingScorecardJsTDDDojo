@@ -20,14 +20,14 @@ module("Score Card Turn Click", {
 												append : function() { }, 
 												on : function() { } , 
 												empty : function() { },
-												val : function() {  }
+												html : function() {  }
 											};
 
 		var appendSpy = sinon.spy(turnScoreCellSelectionResultStub, "append");
 		var onSpy = sinon.spy(turnScoreCellSelectionResultStub, "on");
 		var emptySpy = sinon.spy(turnScoreCellSelectionResultStub, "empty");
-		var valSpy = sinon.stub(turnScoreCellSelectionResultStub, "val");
-		valSpy.returns(currentTurnScoreValue);
+		var htmlSpy = sinon.stub(turnScoreCellSelectionResultStub, "html");
+		htmlSpy.returns(currentTurnScoreValue);
 
 		stubbedJQuery = sinon.stub();
 		stubbedJQuery.withArgs("td.turnScore").returns(turnScoreCellSelectionResultStub);
@@ -81,7 +81,7 @@ test("The turn score keydown proxy test", function() {
 });
 
 test("The turn score click loads current turn score", function() {
-	ok(turnScoreCellSelectionResultStub.val.called, "current score of turn is loaded");
+	ok(turnScoreCellSelectionResultStub.html.called, "current score of turn is loaded");
 });
 
 
