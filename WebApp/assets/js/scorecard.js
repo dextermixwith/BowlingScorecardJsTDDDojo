@@ -16,11 +16,18 @@ ScoreCard.prototype = {
    			.on("click", this.jQueryForProxying.proxy(this.turnScoreClickEventHandler, this));
     },
     turnScoreClickEventHandler : function(event) {
-        var turnInlineInput = this.internalJQuery('<input type="text" class="turnInput" maxlength="1" />');
+        var turnScore = this.internalJQuery(event.currentTarget).val();
+        var turnInlineInput = this.internalJQuery('<input type="text" class="turnInput" maxlength="1" value="' + turnScore + '" />');
         turnInlineInput.on("blur", this.jQueryForProxying.proxy(this.turnScoreBlurHandler, this));
-        turnInlineInput.on("keydown", this.jQueryForProxying.proxy(this.turnKeydownHandler, this))
+        turnInlineInput.on("keydown", this.jQueryForProxying.proxy(this.turnKeydownHandler, this));
         this.internalJQuery(event.currentTarget).empty();
     	this.internalJQuery(event.currentTarget).append(turnInlineInput);
         turnInlineInput.trigger("focus");
+    },
+    turnScoreBlurHandler : function(event) {
+
+    },
+    turnKeydownHandler : function(event) {
+        
     }
 };
