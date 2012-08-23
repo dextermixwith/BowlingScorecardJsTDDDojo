@@ -25,9 +25,10 @@ ScoreCard.prototype = {
         turnInlineInput.trigger("focus");
     },
     turnScoreBlurHandler : function(event) {
-
+        var turnInlineInput = this.internalJQuery(event.currentTarget);
+        turnInlineInput.filter(":parrent");
     },
     turnKeydownHandler : function(event) {
-        
+           
     }
 };
