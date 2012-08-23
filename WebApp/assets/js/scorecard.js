@@ -1,7 +1,7 @@
-var ScoreCard = function (scoreCardTableNode, internalJQuery, injectedTurnScoreClickEventHandler, 
+var ScoreCard = function (scoreCardTableNode, injectedJQuery, injectedTurnScoreClickEventHandler, 
                     injectedJQueryForProxy, injectedTurnBlurHandler, injectedTurnKeydownHandler) {
     this.CurrentTurn = 1;
-    this.internalJQuery = internalJQuery || $;
+    this.$ = injectedJQuery || $;
     this.jQueryForProxying = injectedJQueryForProxy || $;
     this.turnScoreClickEventHandler = injectedTurnScoreClickEventHandler || this.turnScoreClickEventHandler ;
     this.turnScoreBlurHandler = injectedTurnBlurHandler || this.turnScoreBlurHandler;
@@ -12,21 +12,22 @@ var ScoreCard = function (scoreCardTableNode, internalJQuery, injectedTurnScoreC
 
 ScoreCard.prototype = {
     initialiseTable : function(scoreCardTableNode) {
-   		this.internalJQuery("td.turnScore", scoreCardTableNode)
+   		this.$("td.turnScore", scoreCardTableNode)
    			.on("click", this.jQueryForProxying.proxy(this.turnScoreClickEventHandler, this));
     },
     turnScoreClickEventHandler : function(event) {
-        var turnScore = this.internalJQuery(event.currentTarget).html();
-        var turnInlineInput = this.internalJQuery('<input type="text" class="turnInput" maxlength="1" value="' + turnScore + '" />');
+        var turnScore = this.$(event.currentTarget).html();
+        var turnInlineInput = this.$('<input type="text" class="turnInput" maxlength="1" value="' + turnScore + '" />');
         turnInlineInput.on("blur", this.jQueryForProxying.proxy(this.turnScoreBlurHandler, this));
         turnInlineInput.on("keydown", this.jQueryForProxying.proxy(this.turnKeydownHandler, this));
-        this.internalJQuery(event.currentTarget).empty();
-    	this.internalJQuery(event.currentTarget).append(turnInlineInput);
+        this.$(event.currentTarget).empty();
+    	this.$(event.currentTarget).append(turnInlineInput);
         turnInlineInput.trigger("focus");
     },
     turnScoreBlurHandler : function(event) {
-        var turnInlineInput = this.internalJQuery(event.currentTarget);
-        turnInlineInput.filter(":parrent");
+        var turnInlineInput = this.$(event.currentTarget);
+        turnInlineInput.before(turnInlineInput.val());
+        turnInlineInput.remove();
     },
     turnKeydownHandler : function(event) {
            

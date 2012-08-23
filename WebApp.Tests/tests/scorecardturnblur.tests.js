@@ -7,11 +7,12 @@ var scorecardTableNodeCollection = $('<table />');
 var stubbedJQuery, stubbedJQueryProxy, turnScoreCellSelectionResultStub, stubTurnScoreblurEventHandler;
 var scorecard;
 var blurEvent, injectedJQueryForProxy, currentTurnCellStub, turnInlineInputStub, stubTurnScoreBlurEventHandler;
-var scoreTurnInputStub;
-var filterSpy;
+var scoreTurnInputStub, currentTurnScoreValue;
+var beforeStub, valStub, removeStub;
 
 module("Score Card Turn Blur", {
 	setup : function() {
+		currentTurnScoreValue = "5";
 		currentTurnCellStub = sinon.stub({ append : function () {} , on : function() {}, filter : function() {} });
 		
 		scoreTurnInputStub = {  };
@@ -23,13 +24,17 @@ module("Score Card Turn Blur", {
 											 };
 
 		stubbedJQuery = sinon.stub();
-
 		stubbedJQuery.withArgs("td.turnScore").returns(turnScoreCellSelectionResultStub);
 
-		turnInlineInputStub = { filter : function() {} };
-		filterSpy = sinon.stub(turnInlineInputStub, "filter");
-		filterSpy.returns(turnScoreCellSelectionResultStub);
+		turnInlineInputStub = { before : function() {} , val : function() {}, remove : function() {}};
+
+		beforeStub = sinon.stub(turnInlineInputStub, "before");
 		
+		valStub = sinon.stub(turnInlineInputStub, "val");
+		valStub.returns(currentTurnScoreValue);
+
+		removeStub = sinon.stub(turnInlineInputStub, "remove");
+
 		stubbedJQuery.withArgs("td.turnScore").returns(turnScoreCellSelectionResultStub);
 		stubbedJQuery.withArgs(scoreTurnInputStub).returns(turnInlineInputStub);
 
@@ -43,7 +48,15 @@ test("Blur event select find current turn input test", function() {
 	ok(stubbedJQuery.calledWith(scoreTurnInputStub), "current turn cell is found by jQuery");
 });
 
-test("Blur event select find current turn table cell", function() {
-	ok(filterSpy.calledWith(":parrent"), "turn table cell found by filtering to parent of input");
+test("Value of turn is fetched from turn input", function() {
+	ok(valStub.called, "value of turn found by calling val on input");
+});
+
+test("Value of turn input is appended at start of turn table cell", function() {
+	ok(beforeStub.calledWith(currentTurnScoreValue), "value added before turn input");
+});
+
+test("Turn score inline input is removed from DOM", function() {
+	ok(removeStub.called, "input element removed form DOM");
 });
 
