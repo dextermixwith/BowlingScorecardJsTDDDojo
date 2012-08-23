@@ -4,16 +4,15 @@
 
 var scorecardTableNodeCollection = $('<table />');
 
-var stubbedJQuery, stubbedJQueryProxy, turnScoreCellSelectionResultStub, stubTurnScoreblurEventHandler;
+var stubbedJQuery, turnScoreCellSelectionResultStub;
 var scorecard;
-var blurEvent, injectedJQueryForProxy, currentTurnCellStub, turnInlineInputStub, stubTurnScoreBlurEventHandler;
+var blurEvent, turnInlineInputStub;
 var scoreTurnInputStub, currentTurnScoreValue;
 var beforeStub, valStub, removeStub;
 
 module("Score Card Turn Blur", {
 	setup : function() {
 		currentTurnScoreValue = "5";
-		currentTurnCellStub = sinon.stub({ append : function () {} , on : function() {}, filter : function() {} });
 		
 		scoreTurnInputStub = {  };
 		blurEvent = sinon.stub({ currentTarget : scoreTurnInputStub });	
