@@ -1,11 +1,13 @@
 var ScoreCard = function (scoreCardTableNode, injectedJQuery, injectedTurnScoreClickEventHandler, 
-                    injectedJQueryForProxy, injectedTurnBlurHandler, injectedTurnKeydownHandler) {
+                    injectedJQueryForProxy, injectedTurnBlurHandler, injectedTurnKeydownHandler,
+                    scoreKeeper) {
     this.CurrentTurn = 1;
     this.$ = injectedJQuery || $;
     this.jQueryForProxying = injectedJQueryForProxy || $;
     this.turnScoreClickEventHandler = injectedTurnScoreClickEventHandler || this.turnScoreClickEventHandler ;
     this.turnScoreBlurHandler = injectedTurnBlurHandler || this.turnScoreBlurHandler;
     this.turnKeydownHandler = injectedTurnKeydownHandler || this.turnKeydownHandler;
+    this.scoreKeeper = scoreKeeper;
 
     this.initialiseTable(scoreCardTableNode);
 };
@@ -25,11 +27,18 @@ ScoreCard.prototype = {
         turnInlineInput.trigger("focus");
     },
     turnScoreBlurHandler : function(event) {
-        var turnInlineInput = this.$(event.currentTarget);
-        turnInlineInput.before(turnInlineInput.val());
-        turnInlineInput.remove();
+        this.finishTurnScoreEntry(event.currentTarget); 
     },
     turnKeydownHandler : function(event) {
-           
+        if (event.which == 13) {
+            this.finishTurnScoreEntry(event.currentTarget); 
+        } else {
+            this.scoreKeeper.updateScoreTurn();
+        }
+    },
+    finishTurnScoreEntry : function(turnScoreDOMInputNode) {
+        var turnInlineInput = this.$(turnScoreDOMInputNode);
+        turnInlineInput.before(turnInlineInput.val());
+        turnInlineInput.remove();  
     }
 };
