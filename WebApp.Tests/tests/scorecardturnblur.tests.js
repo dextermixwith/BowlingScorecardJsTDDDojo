@@ -9,6 +9,7 @@ var scorecard;
 var blurEvent, turnInlineInputStub;
 var scoreTurnInputStub, currentTurnScoreValue;
 var beforeStub, valStub, removeStub;
+var stubScoreKeeper;
 
 module("Score Card Turn Blur", {
 	setup : function() {
@@ -36,9 +37,10 @@ module("Score Card Turn Blur", {
 
 		stubbedJQuery.withArgs("td.turnScore").returns(turnScoreCellSelectionResultStub);
 		stubbedJQuery.withArgs(scoreTurnInputStub).returns(turnInlineInputStub);
+		stubScoreKeeper = sinon.stub({ updateScoreTurn : function() {} });
 
 
-		scorecard = new ScoreCard(scorecardTableNodeCollection, stubbedJQuery).turnScoreBlurHandler(blurEvent);	
+		scorecard = new ScoreCard(scorecardTableNodeCollection, stubbedJQuery, null, null, null, null, stubScoreKeeper).turnScoreBlurHandler(blurEvent);	
 	}
 });
 
@@ -49,6 +51,11 @@ test("Blur event select find current turn input test", function() {
 
 test("Value of turn is fetched from turn input", function() {
 	ok(valStub.called, "value of turn found by calling val on input");
+});
+
+
+test("Score keeper is called to update turn score", function() {
+	ok(stubScoreKeeper.updateScoreTurn.calledWith(currentTurnScoreValue), "score keeper is called to update turn score");
 });
 
 test("Value of turn input is appended at start of turn table cell", function() {

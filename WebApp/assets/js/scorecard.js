@@ -26,19 +26,31 @@ ScoreCard.prototype = {
     	this.$(event.currentTarget).append(turnInlineInput);
         turnInlineInput.trigger("focus");
     },
+    
     turnScoreBlurHandler : function(event) {
-        this.finishTurnScoreEntry(event.currentTarget); 
+        var turnScore = this.finishTurnScoreEntry(event.currentTarget); 
+        this.scoreKeeper.updateScoreTurn(turnScore); 
     },
+
     turnKeydownHandler : function(event) {
         if (event.which == 13) {
-            this.finishTurnScoreEntry(event.currentTarget); 
-        } else {
-            this.scoreKeeper.updateScoreTurn();
-        }
+            var turnScore = this.finishTurnScoreEntry(event.currentTarget); 
+            this.scoreKeeper.updateScoreTurn(turnScore); 
+        } else if (event.which == 27) {
+            this.cancelTurnScoreEntry(event.currentTarget); 
+        };  
+     
     },
+    
     finishTurnScoreEntry : function(turnScoreDOMInputNode) {
         var turnInlineInput = this.$(turnScoreDOMInputNode);
-        turnInlineInput.before(turnInlineInput.val());
+        var turnScore = turnInlineInput.val();
+        turnInlineInput.before(turnScore);
         turnInlineInput.remove();  
+        return turnScore;
+    },
+    
+    cancelTurnScoreEntry : function(turnScoreDOMInputNode) {
+        this.$(turnScoreDOMInputNode).remove();  
     }
 };
