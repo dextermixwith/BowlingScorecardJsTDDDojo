@@ -1,3 +1,9 @@
+var ScoreKeeper = function() {};
+
+ScoreKeeper.prototype = {
+    updateScoreTurn : function () {}    
+};
+
 var ScoreCard = function (scoreCardTableNode, injectedJQuery, injectedTurnScoreClickEventHandler, 
                     injectedJQueryForProxy, injectedTurnBlurHandler, injectedTurnKeydownHandler,
                     scoreKeeper) {
@@ -7,7 +13,7 @@ var ScoreCard = function (scoreCardTableNode, injectedJQuery, injectedTurnScoreC
     this.turnScoreClickEventHandler = injectedTurnScoreClickEventHandler || this.turnScoreClickEventHandler ;
     this.turnScoreBlurHandler = injectedTurnBlurHandler || this.turnScoreBlurHandler;
     this.turnKeydownHandler = injectedTurnKeydownHandler || this.turnKeydownHandler;
-    this.scoreKeeper = scoreKeeper;
+    this.scoreKeeper = scoreKeeper || new ScoreKeeper();
 
     this.initialiseTable(scoreCardTableNode);
 };
@@ -17,13 +23,14 @@ ScoreCard.prototype = {
    		this.$("td.turnScore", scoreCardTableNode)
    			.on("click", this.jQueryForProxying.proxy(this.turnScoreClickEventHandler, this));
     },
+
     turnScoreClickEventHandler : function(event) {
-        var turnScore = this.$(event.currentTarget).html();
+        var turnScore = this.$('span.currentScoreValue', event.currentTarget).html();
         var turnInlineInput = this.$('<input type="text" class="turnInput" maxlength="1" value="' + turnScore + '" />');
         turnInlineInput.on("blur", this.jQueryForProxying.proxy(this.turnScoreBlurHandler, this));
         turnInlineInput.on("keydown", this.jQueryForProxying.proxy(this.turnKeydownHandler, this));
-        this.$(event.currentTarget).empty();
-    	this.$(event.currentTarget).append(turnInlineInput);
+        this.$('span.currentScoreValue', event.currentTarget).hide();
+    	this.$('span.currentScoreValue', event.currentTarget).after(turnInlineInput);
         turnInlineInput.trigger("focus");
     },
     
@@ -45,7 +52,10 @@ ScoreCard.prototype = {
     finishTurnScoreEntry : function(turnScoreDOMInputNode) {
         var turnInlineInput = this.$(turnScoreDOMInputNode);
         var turnScore = turnInlineInput.val();
-        turnInlineInput.before(turnScore);
+        var turnCell = turnInlineInput.parent();
+        var currentScoreSpan = this.$('span.currentScoreValue', turnCell);
+        currentScoreSpan.html(turnScore);
+        currentScoreSpan.show();
         turnInlineInput.remove();  
         return turnScore;
     },

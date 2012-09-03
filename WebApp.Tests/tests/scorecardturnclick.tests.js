@@ -17,21 +17,21 @@ module("Score Card Turn Click", {
 		clickEvent = sinon.stub({ currentTarget : currentTurnCellStub });	
 
 		turnScoreCellSelectionResultStub =  { 
-												append : function() { }, 
+												after : function() { }, 
 												on : function() { } , 
-												empty : function() { },
+												hide : function() { },
 												html : function() {  }
 											};
 
-		var appendSpy = sinon.spy(turnScoreCellSelectionResultStub, "append");
+		var appendSpy = sinon.spy(turnScoreCellSelectionResultStub, "after");
 		var onSpy = sinon.spy(turnScoreCellSelectionResultStub, "on");
-		var emptySpy = sinon.spy(turnScoreCellSelectionResultStub, "empty");
+		var emptySpy = sinon.spy(turnScoreCellSelectionResultStub, "hide");
 		var htmlSpy = sinon.stub(turnScoreCellSelectionResultStub, "html");
 		htmlSpy.returns(currentTurnScoreValue);
 
 		stubbedJQuery = sinon.stub();
 		stubbedJQuery.withArgs("td.turnScore").returns(turnScoreCellSelectionResultStub);
-		stubbedJQuery.withArgs(currentTurnCellStub).returns(turnScoreCellSelectionResultStub);
+		stubbedJQuery.withArgs("span.currentScoreValue", currentTurnCellStub).returns(turnScoreCellSelectionResultStub);
 		stubbedJQuery.withArgs('<input type="text" class="turnInput" maxlength="1" value="' + currentTurnScoreValue + '" />').returns(turnInlineInputStub);
 
 		stubTurnScoreBlurEventHandler = function () {};
@@ -44,20 +44,20 @@ module("Score Card Turn Click", {
 });
 
 test("Click event select find current turn cell test", function() {
-	ok(stubbedJQuery.calledWith(currentTurnCellStub), "current turn cell is found by jQuery");
+	ok(stubbedJQuery.calledWith("span.currentScoreValue", currentTurnCellStub), "current turn cell is found by jQuery");
 });
 
 
-test("Current turn cell append test", function() {
-	ok(turnScoreCellSelectionResultStub.append.called, "append is called on turn score cell element");
+test("Current turn cell after test", function() {
+	ok(turnScoreCellSelectionResultStub.after.called, "after is called on turn score cell element");
 });
 
-test("Current turn cell contents cleared test", function() {
-	ok(turnScoreCellSelectionResultStub.empty.called, "empty is call on turn score cell");
+test("Current turn cell contents hidden test", function() {
+	ok(turnScoreCellSelectionResultStub.hide.called, "hide is call on turn score cell");
 });
 
 test("Current turn cell add input test", function() {
-	ok(turnScoreCellSelectionResultStub.append.calledWith(turnInlineInputStub), "inline input is added to turn cell");
+	ok(turnScoreCellSelectionResultStub.after.calledWith(turnInlineInputStub), "inline input is added to turn cell");
 });
 
 test("Current turn cell focused input test", function() {

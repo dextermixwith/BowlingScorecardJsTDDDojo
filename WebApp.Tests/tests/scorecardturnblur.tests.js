@@ -10,6 +10,8 @@ var blurEvent, turnInlineInputStub;
 var scoreTurnInputStub, currentTurnScoreValue;
 var beforeStub, valStub, removeStub;
 var stubScoreKeeper;
+var showStub, htmlStub, currentTurnScoreValueStub;
+var inputParentStub;
 
 module("Score Card Turn Blur", {
 	setup : function() {
@@ -19,23 +21,26 @@ module("Score Card Turn Blur", {
 		blurEvent = sinon.stub({ currentTarget : scoreTurnInputStub });	
 
 		
-		turnScoreCellSelectionResultStub =  { 
-												on : function() { } , 
-											 };
+		turnScoreCellSelectionResultStub =  { on : function() { } , };
 
 		stubbedJQuery = sinon.stub();
 		stubbedJQuery.withArgs("td.turnScore").returns(turnScoreCellSelectionResultStub);
 
-		turnInlineInputStub = { before : function() {} , val : function() {}, remove : function() {}};
+		turnInlineInputStub = { val : function() {}, remove : function() {}, parent : function() {} };
 
-		beforeStub = sinon.stub(turnInlineInputStub, "before");
-		
 		valStub = sinon.stub(turnInlineInputStub, "val");
 		valStub.returns(currentTurnScoreValue);
-
+		inputParentStub = sinon.stub(turnInlineInputStub, "parent");
+		inputParentStub.returns(turnScoreCellSelectionResultStub);
 		removeStub = sinon.stub(turnInlineInputStub, "remove");
-
+		
 		stubbedJQuery.withArgs("td.turnScore").returns(turnScoreCellSelectionResultStub);
+
+		currentTurnScoreValueStub = { show : function() {}, html : function() {} };
+		showStub = sinon.stub(currentTurnScoreValueStub, "show");
+		htmlStub = sinon.stub(currentTurnScoreValueStub, "html");
+
+		stubbedJQuery.withArgs("span.currentScoreValue", turnScoreCellSelectionResultStub).returns(currentTurnScoreValueStub);
 		stubbedJQuery.withArgs(scoreTurnInputStub).returns(turnInlineInputStub);
 		stubScoreKeeper = sinon.stub({ updateScoreTurn : function() {} });
 
@@ -58,8 +63,16 @@ test("Score keeper is called to update turn score", function() {
 	ok(stubScoreKeeper.updateScoreTurn.calledWith(currentTurnScoreValue), "score keeper is called to update turn score");
 });
 
-test("Value of turn input is appended at start of turn table cell", function() {
-	ok(beforeStub.calledWith(currentTurnScoreValue), "value added before turn input");
+test("Current score span is found", function() {
+	ok(stubbedJQuery.calledWith("span.currentScoreValue", turnScoreCellSelectionResultStub), "current score value span is found");
+});
+
+test("Current score span is updated with new score", function() {
+	ok(htmlStub.calledWith(currentTurnScoreValue), "score span html is is updated with new score");
+});
+
+test("Current score span is shown again", function() {
+	ok(showStub.called, "show is called on current score span DOM element.");
 });
 
 test("Turn score inline input is removed from DOM", function() {
