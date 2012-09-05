@@ -61,6 +61,9 @@ ScoreCard.prototype = {
     },
     
     cancelTurnScoreEntry : function(turnScoreDOMInputNode) {
-        this.$(turnScoreDOMInputNode).remove();  
+        var turnInlineInput = this.$(turnScoreDOMInputNode);
+        var turnCell = turnInlineInput.parent();
+        this.$('span.currentScoreValue', turnCell).show();
+        turnInlineInput.remove();
     }
 };
