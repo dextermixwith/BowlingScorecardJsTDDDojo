@@ -19,48 +19,49 @@ var ScoreCard = function (scoreCardTableNode, injectedJQuery, injectedTurnScoreC
 };
 
 ScoreCard.prototype = {
-    initialiseTable : function(scoreCardTableNode) {
-   		this.$("td.turnScore", scoreCardTableNode)
+    initialiseTable: function (scoreCardTableNode) {
+        this.$("td.turnScore", scoreCardTableNode)
    			.on("click", this.jQueryForProxying.proxy(this.turnScoreClickEventHandler, this));
     },
 
-    turnScoreClickEventHandler : function(event) {
+    turnScoreClickEventHandler: function (event) {
         var turnScore = this.$('span.currentScoreValue', event.currentTarget).html();
         var turnInlineInput = this.$('<input type="text" class="turnInput" maxlength="1" value="' + turnScore + '" />');
         turnInlineInput.on("blur", this.jQueryForProxying.proxy(this.turnScoreBlurHandler, this));
         turnInlineInput.on("keydown", this.jQueryForProxying.proxy(this.turnKeydownHandler, this));
         this.$('span.currentScoreValue', event.currentTarget).hide();
-    	this.$('span.currentScoreValue', event.currentTarget).after(turnInlineInput);
+        this.$('span.currentScoreValue', event.currentTarget).after(turnInlineInput);
         turnInlineInput.trigger("focus");
     },
-    
-    turnScoreBlurHandler : function(event) {
-        var turnScore = this.finishTurnScoreEntry(event.currentTarget); 
-        this.scoreKeeper.updateScoreTurn(turnScore); 
+
+    turnScoreBlurHandler: function (event) {
+        var turnScore = this.finishTurnScoreEntry(event.currentTarget);
+        this.scoreKeeper.updateScoreTurn(turnScore);
     },
 
-    turnKeydownHandler : function(event) {
+    turnKeydownHandler: function (event) {
         if (event.which == 13) {
-            var turnScore = this.finishTurnScoreEntry(event.currentTarget); 
-            this.scoreKeeper.updateScoreTurn(turnScore); 
+            var turnScore = this.finishTurnScoreEntry(event.currentTarget);
+            this.scoreKeeper.updateScoreTurn(turnScore);
         } else if (event.which == 27) {
-            this.cancelTurnScoreEntry(event.currentTarget); 
-        };  
-     
+            this.cancelTurnScoreEntry(event.currentTarget);
+        };
+
     },
-    
-    finishTurnScoreEntry : function(turnScoreDOMInputNode) {
+
+    finishTurnScoreEntry: function (turnScoreDOMInputNode) {
         var turnInlineInput = this.$(turnScoreDOMInputNode);
         var turnScore = turnInlineInput.val();
         var turnCell = turnInlineInput.parent();
         var currentScoreSpan = this.$('span.currentScoreValue', turnCell);
-        currentScoreSpan.html(turnScore);
+        console.log(currentScoreSpan);
         currentScoreSpan.show();
-        turnInlineInput.remove();  
+        currentScoreSpan.html(turnScore);
+        turnInlineInput.remove();
         return turnScore;
     },
-    
-    cancelTurnScoreEntry : function(turnScoreDOMInputNode) {
+
+    cancelTurnScoreEntry: function (turnScoreDOMInputNode) {
         var turnInlineInput = this.$(turnScoreDOMInputNode);
         var turnCell = turnInlineInput.parent();
         this.$('span.currentScoreValue', turnCell).show();

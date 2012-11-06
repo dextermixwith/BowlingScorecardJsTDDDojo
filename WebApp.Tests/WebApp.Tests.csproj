@@ -44,9 +44,19 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="jasmine\jasmine-html.js" />
+    <Content Include="jasmine\jasmine.css" />
+    <Content Include="jasmine\jasmine.js" />
     <Content Include="sinon\sinon-1.4.2.js" />
-    <Content Include="tests\pushregistrations.tests.js" />
-    <Content Include="tests\scorecard.tests.js" />
+    <Content Include="tests\scorecard.spec.js" />
+    <Content Include="tests\scorecardturnblur.spec.js" />
+    <Content Include="tests\scorecardturnclick.spec.js" />
+    <Content Include="tests\scorecardturnkeydown.spec.js" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="jasmine\MIT.LICENSE" />
+    <None Include="jsTestDriver.conf" />
+    <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
