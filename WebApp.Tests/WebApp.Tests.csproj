@@ -40,7 +40,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Class1.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -49,9 +48,6 @@
     <Content Include="jasmine\jasmine.js" />
     <Content Include="sinon\sinon-1.4.2.js" />
     <Content Include="tests\scorecard.spec.js" />
-    <Content Include="tests\scorecardturnblur.spec.js" />
-    <Content Include="tests\scorecardturnclick.spec.js" />
-    <Content Include="tests\scorecardturnkeydown.spec.js" />
   </ItemGroup>
   <ItemGroup>
     <None Include="jasmine\MIT.LICENSE" />
