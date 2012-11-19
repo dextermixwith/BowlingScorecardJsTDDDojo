@@ -4,12 +4,10 @@ ScoreKeeper.prototype = {
     updateScoreTurn : function () {}    
 };
 
-var ScoreCard = function (scoreCardTableNode, injectedJQuery, injectedTurnScoreClickEventHandler, 
-                    injectedJQueryForProxy, injectedTurnBlurHandler, injectedTurnKeydownHandler,
-                    scoreKeeper) {
+var ScoreCard = function (scoreCardTableNode, injectedJQuery, injectedTurnScoreClickEventHandler,
+                            injectedTurnBlurHandler, injectedTurnKeydownHandler, scoreKeeper) {
     this.CurrentTurn = 1;
     this.$ = injectedJQuery || $;
-    this.jQueryForProxying = injectedJQueryForProxy || $;
     this.turnScoreClickEventHandler = injectedTurnScoreClickEventHandler || this.turnScoreClickEventHandler ;
     this.turnScoreBlurHandler = injectedTurnBlurHandler || this.turnScoreBlurHandler;
     this.turnKeydownHandler = injectedTurnKeydownHandler || this.turnKeydownHandler;
@@ -20,15 +18,16 @@ var ScoreCard = function (scoreCardTableNode, injectedJQuery, injectedTurnScoreC
 
 ScoreCard.prototype = {
     initialiseTable: function (scoreCardTableNode) {
-        this.$("td.turnScore", scoreCardTableNode)
-   			.on("click", this.jQueryForProxying.proxy(this.turnScoreClickEventHandler, this));
+        this.$("td.turnScore", scoreCardTableNode).on("click", this.$.proxy(this.turnScoreClickEventHandler, this));
     },
 
     turnScoreClickEventHandler: function (event) {
         var turnScore = this.$('span.currentScoreValue', event.currentTarget).html();
         var turnInlineInput = this.$('<input type="text" class="turnInput" maxlength="1" value="' + turnScore + '" />');
-        turnInlineInput.on("blur", this.jQueryForProxying.proxy(this.turnScoreBlurHandler, this));
-        turnInlineInput.on("keydown", this.jQueryForProxying.proxy(this.turnKeydownHandler, this));
+        var blurProxy = this.$.proxy(this.turnScoreBlurHandler, this);
+        turnInlineInput.on("blur", blurProxy);
+        var keyDownProxy = this.$.proxy(this.turnKeydownHandler, this);
+        turnInlineInput.on("keydown", keyDownProxy);
         this.$('span.currentScoreValue', event.currentTarget).hide();
         this.$('span.currentScoreValue', event.currentTarget).after(turnInlineInput);
         turnInlineInput.trigger("focus");

@@ -47,6 +47,7 @@
     <Content Include="jasmine\jasmine-html.js" />
     <Content Include="jasmine\jasmine.css" />
     <Content Include="jasmine\jasmine.js" />
+    <Content Include="jasmine\JasmineAdapter.js" />
     <Content Include="sinon\sinon-1.4.2.js" />
     <Content Include="tests\scorecard.spec.js" />
     <Content Include="tests\scorecardturnblur.spec.js" />

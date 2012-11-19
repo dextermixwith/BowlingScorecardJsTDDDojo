@@ -5,7 +5,7 @@
 
    var scorecardTableNodeCollection = $('<table />');
 
-    var stubbedJQuery;
+    var jQuerySpy;
     var turnScoreCellSelectionResultStub;
     var keydownEvent;
     var turnInlineInputStub;
@@ -44,17 +44,17 @@ describe("When 'Enter' is is pressed in score turn input", function() {
 		
 		stubScoreKeeper = sinon.stub({ updateScoreTurn : function() {} });
 	
-		stubbedJQuery = sinon.stub();
-		stubbedJQuery.withArgs("td.turnScore").returns(turnScoreCellSelectionResultStub);
-		stubbedJQuery.withArgs(scoreTurnInputStub).returns(turnInlineInputStub);
-		stubbedJQuery.withArgs("span.currentScoreValue", turnScoreCellSelectionResultStub).returns(currentTurnScoreValueStub);
+		jQuerySpy = sinon.stub();
+		jQuerySpy.withArgs("td.turnScore").returns(turnScoreCellSelectionResultStub);
+		jQuerySpy.withArgs(scoreTurnInputStub).returns(turnInlineInputStub);
+		jQuerySpy.withArgs("span.currentScoreValue", turnScoreCellSelectionResultStub).returns(currentTurnScoreValueStub);
 
-		(new ScoreCard(scorecardTableNodeCollection, stubbedJQuery, null, null, null, null, stubScoreKeeper)).turnKeydownHandler(keydownEvent);	
+		(new ScoreCard(scorecardTableNodeCollection, jQuerySpy, null, null, null, null, stubScoreKeeper)).turnKeydownHandler(keydownEvent);	
 	});
 
 
     it("finds current turn cell using jQuery", function() {
-	    expect(stubbedJQuery.calledWith(scoreTurnInputStub)).toBe(true);
+	    expect(jQuerySpy.calledWith(scoreTurnInputStub)).toBe(true);
     });
 
     it("fetches value of turn from turn input", function() {
@@ -66,7 +66,7 @@ describe("When 'Enter' is is pressed in score turn input", function() {
     });
 
     it("finds current score span", function() {
-	    expect(stubbedJQuery.calledWith("span.currentScoreValue", turnScoreCellSelectionResultStub)).toBe(true);
+	    expect(jQuerySpy.calledWith("span.currentScoreValue", turnScoreCellSelectionResultStub)).toBe(true);
     });
 
     it("updates current score span with new score", function() {
@@ -97,8 +97,8 @@ describe("When score turn keydown 0 pressed", function() {
             },
         };
 
-        stubbedJQuery = sinon.stub();
-        stubbedJQuery.withArgs("td.turnScore").returns(turnScoreCellSelectionResultStub);
+        jQuerySpy = sinon.stub();
+        jQuerySpy.withArgs("td.turnScore").returns(turnScoreCellSelectionResultStub);
 
         scoreTurnInputStub = { };
         keydownEvent = sinon.stub({ currentTarget: scoreTurnInputStub, which: 48 });
@@ -120,13 +120,13 @@ describe("When score turn keydown 0 pressed", function() {
 
         removeStub = sinon.stub(turnInlineInputStub, "remove");
 
-        stubbedJQuery.withArgs(scoreTurnInputStub).returns(turnInlineInputStub);
+        jQuerySpy.withArgs(scoreTurnInputStub).returns(turnInlineInputStub);
         stubScoreKeeper = sinon.stub({
             updateScoreTurn: function() {
             }
         });
 
-        keyDownHandlerResult = (new ScoreCard(scorecardTableNodeCollection, stubbedJQuery, null, null, null, null, stubScoreKeeper)).turnKeydownHandler(keydownEvent);
+        keyDownHandlerResult = (new ScoreCard(scorecardTableNodeCollection, jQuerySpy, null, null, null, null, stubScoreKeeper)).turnKeydownHandler(keydownEvent);
     });
 
     it("does not call the score keeper to update turn score", function() {
@@ -150,8 +150,8 @@ describe("When score card turn keydown number 9 is pressed", function() {
             },
         };
 
-        stubbedJQuery = sinon.stub();
-        stubbedJQuery.withArgs("td.turnScore").returns(turnScoreCellSelectionResultStub);
+        jQuerySpy = sinon.stub();
+        jQuerySpy.withArgs("td.turnScore").returns(turnScoreCellSelectionResultStub);
 
         scoreTurnInputStub = { };
         keydownEvent = sinon.stub({ currentTarget: scoreTurnInputStub, which: 57 });
@@ -181,13 +181,13 @@ describe("When score card turn keydown number 9 is pressed", function() {
         };
         showStub = sinon.stub(currentTurnScoreValueStub, "show");
 
-        stubbedJQuery.withArgs(scoreTurnInputStub).returns(turnInlineInputStub);
+        jQuerySpy.withArgs(scoreTurnInputStub).returns(turnInlineInputStub);
         stubScoreKeeper = sinon.stub({
             updateScoreTurn: function() {
             }
         });
 
-        keyDownHandlerResult = (new ScoreCard(scorecardTableNodeCollection, stubbedJQuery, null, null, null, null, stubScoreKeeper)).turnKeydownHandler(keydownEvent);
+        keyDownHandlerResult = (new ScoreCard(scorecardTableNodeCollection, jQuerySpy, null, null, null, null, stubScoreKeeper)).turnKeydownHandler(keydownEvent);
     });
 
     it("does not call the score keeper to update turn score", function() {
@@ -212,8 +212,8 @@ describe("When score card turn keydown ESC key is pressed", function() {
             },
         };
 
-        stubbedJQuery = sinon.stub();
-        stubbedJQuery.withArgs("td.turnScore").returns(turnScoreCellSelectionResultStub);
+        jQuerySpy = sinon.stub();
+        jQuerySpy.withArgs("td.turnScore").returns(turnScoreCellSelectionResultStub);
 
         scoreTurnInputStub = { };
         keydownEvent = sinon.stub({ currentTarget: scoreTurnInputStub, which: 27 });
@@ -239,15 +239,15 @@ describe("When score card turn keydown ESC key is pressed", function() {
 
         removeStub = sinon.stub(turnInlineInputStub, "remove");
 
-        stubbedJQuery.withArgs(scoreTurnInputStub).returns(turnInlineInputStub);
+        jQuerySpy.withArgs(scoreTurnInputStub).returns(turnInlineInputStub);
         stubScoreKeeper = sinon.stub({
             updateScoreTurn: function() {
             }
         });
-        stubbedJQuery.withArgs("span.currentScoreValue", turnScoreCellSelectionResultStub).returns(currentTurnScoreValueStub);
+        jQuerySpy.withArgs("span.currentScoreValue", turnScoreCellSelectionResultStub).returns(currentTurnScoreValueStub);
 
 
-        keyDownHandlerResult = (new ScoreCard(scorecardTableNodeCollection, stubbedJQuery, null, null, null, null, stubScoreKeeper)).turnKeydownHandler(keydownEvent);
+        keyDownHandlerResult = (new ScoreCard(scorecardTableNodeCollection, jQuerySpy, null, null, null, null, stubScoreKeeper)).turnKeydownHandler(keydownEvent);
     });
 
     it("does not call the score keeper to update turn score", function() {
@@ -259,7 +259,7 @@ describe("When score card turn keydown ESC key is pressed", function() {
     });
 
     it("finds score span", function() {
-        expect(stubbedJQuery.calledWith("span.currentScoreValue", turnScoreCellSelectionResultStub)).toBe(true);
+        expect(jQuerySpy.calledWith("span.currentScoreValue", turnScoreCellSelectionResultStub)).toBe(true);
     });
 
     it("shows current score span again", function() {

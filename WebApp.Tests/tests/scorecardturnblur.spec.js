@@ -4,7 +4,7 @@
 
 var scorecardTableNodeCollection = $('<table />');
 
-var stubbedJQuery;
+var jQuerySpy;
 var turnScoreCellSelectionResultStub;
 var scorecard;
 var blurEvent;
@@ -33,8 +33,8 @@ describe("When a score card turn input is blurred", function() {
             },
         };
 
-        stubbedJQuery = sinon.stub();
-        stubbedJQuery.withArgs("td.turnScore").returns(turnScoreCellSelectionResultStub);
+        jQuerySpy = sinon.stub();
+        jQuerySpy.withArgs("td.turnScore").returns(turnScoreCellSelectionResultStub);
 
         turnInlineInputStub = {
             val: function() {
@@ -51,7 +51,7 @@ describe("When a score card turn input is blurred", function() {
         inputParentStub.returns(turnScoreCellSelectionResultStub);
         removeStub = sinon.stub(turnInlineInputStub, "remove");
 
-        stubbedJQuery.withArgs("td.turnScore").returns(turnScoreCellSelectionResultStub);
+        jQuerySpy.withArgs("td.turnScore").returns(turnScoreCellSelectionResultStub);
 
         currentTurnScoreValueStub = {
             show: function() {
@@ -62,19 +62,19 @@ describe("When a score card turn input is blurred", function() {
         showStub = sinon.stub(currentTurnScoreValueStub, "show");
         htmlStub = sinon.stub(currentTurnScoreValueStub, "html");
 
-        stubbedJQuery.withArgs("span.currentScoreValue", turnScoreCellSelectionResultStub).returns(currentTurnScoreValueStub);
-        stubbedJQuery.withArgs(scoreTurnInputStub).returns(turnInlineInputStub);
+        jQuerySpy.withArgs("span.currentScoreValue", turnScoreCellSelectionResultStub).returns(currentTurnScoreValueStub);
+        jQuerySpy.withArgs(scoreTurnInputStub).returns(turnInlineInputStub);
         stubScoreKeeper = sinon.stub({
             updateScoreTurn: function() {
             }
         });
 
 
-        scorecard = new ScoreCard(scorecardTableNodeCollection, stubbedJQuery, null, null, null, null, stubScoreKeeper).turnScoreBlurHandler(blurEvent);
+        scorecard = new ScoreCard(scorecardTableNodeCollection, jQuerySpy, null, null, null, null, stubScoreKeeper).turnScoreBlurHandler(blurEvent);
     });
 
     it("finds current turn cell using jQuery", function() {
-        expect(stubbedJQuery.calledWith(scoreTurnInputStub)).toBe(true);
+        expect(jQuerySpy.calledWith(scoreTurnInputStub)).toBe(true);
     });
 
     it("fetches value of turn from turn input", function() {
@@ -86,7 +86,7 @@ describe("When a score card turn input is blurred", function() {
     });
 
     it("finds current score span", function() {
-        expect(stubbedJQuery.calledWith("span.currentScoreValue", turnScoreCellSelectionResultStub)).toBe(true);
+        expect(jQuerySpy.calledWith("span.currentScoreValue", turnScoreCellSelectionResultStub)).toBe(true);
     });
 
     it("updates current score span with new score", function() {
