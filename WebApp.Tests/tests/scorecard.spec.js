@@ -1,6 +1,5 @@
 /// <reference path="../../WebApp/assets/js/jquery-1.7.2.min.js" />
 /// <reference path="../../WebApp/assets/js/scorecard.js" />
-/// <reference path="../sinon/sinon-1.4.2.js" />
 /// <reference path="../jasmine/jasmine.js" />
 
 var scorecardTableNodeCollection = $('<table />');

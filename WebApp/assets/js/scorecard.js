@@ -45,7 +45,6 @@ ScoreCard.prototype = {
         } else if (event.which == 27) {
             this.cancelTurnScoreEntry(event.currentTarget);
         };
-
     },
 
     finishTurnScoreEntry: function (turnScoreDOMInputNode) {

@@ -21,15 +21,13 @@ var stubTurnScoreKeydownEventHandler;
 
 describe("When a score card turn cell is clicked", function () {
     beforeEach(function () {
-        currentTurnScoreValue = "5";
-        currentTurnCellStub = sinon.stub({
-            append: function () {
-            },
-            on: function () {
-            }
-        });
         turnInlineInputStub = jasmine.createSpyObj("turnInlineInputStub", ["on", "trigger"]);
-        clickEvent = sinon.stub({ currentTarget: currentTurnCellStub });
+        
+        currentTurnScoreValue = "5";
+        currentTurnCellStub = jasmine.createSpyObj("currentTurnCellStub", ["append", "on"]);
+
+        clickEvent = { currentTarget: currentTurnCellStub };
+        
         turnScoreCellSelectionResultStub = jasmine.createSpyObj("turnScoreCellSelectionResultStub", ["after", "on", "hide"]);
         turnScoreCellSelectionResultStub.html = jasmine.createSpy("html").andReturn(currentTurnScoreValue);
         jQuerySpy = jasmine.createSpy("jQuerySpy").andCallFake(function () {

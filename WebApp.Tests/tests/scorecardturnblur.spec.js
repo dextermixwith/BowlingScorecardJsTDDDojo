@@ -1,6 +1,6 @@
 /// <reference path="../../WebApp/assets/js/jquery-1.7.2.min.js" />
 /// <reference path="../../WebApp/assets/js/scorecard.js" />
-/// <reference path="../sinon/sinon-1.4.2.js" />
+/// <reference path="../jasmine/jasmine.js" />
 
 var scorecardTableNodeCollection = $('<table />');
 
@@ -19,85 +19,74 @@ var showStub;
 var htmlStub;
 var currentTurnScoreValueStub;
 var inputParentStub;
+var proxiedClickHandler = function () { };
 
-describe("When a score card turn input is blurred", function() {
-    beforeEach(function() {
+describe("When a score card turn input is blurred", function () {
+    beforeEach(function () {
         currentTurnScoreValue = "5";
-
-        scoreTurnInputStub = { };
-        blurEvent = sinon.stub({ currentTarget: scoreTurnInputStub });
-
-
-        turnScoreCellSelectionResultStub = {
-            on: function() {
-            },
-        };
-
-        jQuerySpy = sinon.stub();
-        jQuerySpy.withArgs("td.turnScore").returns(turnScoreCellSelectionResultStub);
-
-        turnInlineInputStub = {
-            val: function() {
-            },
-            remove: function() {
-            },
-            parent: function() {
-            }
-        };
-
-        valStub = sinon.stub(turnInlineInputStub, "val");
-        valStub.returns(currentTurnScoreValue);
-        inputParentStub = sinon.stub(turnInlineInputStub, "parent");
-        inputParentStub.returns(turnScoreCellSelectionResultStub);
-        removeStub = sinon.stub(turnInlineInputStub, "remove");
-
-        jQuerySpy.withArgs("td.turnScore").returns(turnScoreCellSelectionResultStub);
+        scoreTurnInputStub = {};
+        blurEvent = { currentTarget: scoreTurnInputStub };
+        turnScoreCellSelectionResultStub = { on: function () { } };
 
         currentTurnScoreValueStub = {
-            show: function() {
-            },
-            html: function() {
-            }
+            show: jasmine.createSpy("show"),
+            html: jasmine.createSpy("html")
         };
-        showStub = sinon.stub(currentTurnScoreValueStub, "show");
-        htmlStub = sinon.stub(currentTurnScoreValueStub, "html");
+        turnInlineInputStub = {
+            val: jasmine.createSpy("val").andReturn(currentTurnScoreValue),
+            remove: jasmine.createSpy("remove"), 
+            parent: function () { return turnInlineInputStub; }
+        };
 
-        jQuerySpy.withArgs("span.currentScoreValue", turnScoreCellSelectionResultStub).returns(currentTurnScoreValueStub);
-        jQuerySpy.withArgs(scoreTurnInputStub).returns(turnInlineInputStub);
-        stubScoreKeeper = sinon.stub({
-            updateScoreTurn: function() {
+        jQuerySpy = jasmine.createSpy("jQuerySpy").andCallFake(
+            function () {
+                if (arguments[0] == "td.turnScore") {
+                    return turnScoreCellSelectionResultStub;
+                }
+                if (arguments[0] == "span.currentScoreValue") {
+                    return currentTurnScoreValueStub;
+                }
+                if (arguments[0] == scoreTurnInputStub) {
+                    return turnInlineInputStub;
+                }
+                return null;
             }
-        });
+        );
+        
+        jQuerySpy.proxy = jasmine.createSpy("proxy").andReturn(proxiedClickHandler);
 
+        stubScoreKeeper = jasmine.createSpyObj("stubScoreKeeper", ["updateScoreTurn"]);
 
-        scorecard = new ScoreCard(scorecardTableNodeCollection, jQuerySpy, null, null, null, null, stubScoreKeeper).turnScoreBlurHandler(blurEvent);
+        scorecard = new ScoreCard(scorecardTableNodeCollection, jQuerySpy, null, null, null, stubScoreKeeper).turnScoreBlurHandler(blurEvent);
     });
 
-    it("finds current turn cell using jQuery", function() {
-        expect(jQuerySpy.calledWith(scoreTurnInputStub)).toBe(true);
+    it("then finds the current turn score cells in the table", function () {
+        expect(jQuerySpy).toHaveBeenCalledWith("td.turnScore", scorecardTableNodeCollection);
     });
 
-    it("fetches value of turn from turn input", function() {
-        expect(valStub.called).toBe(true);
+    
+    it("then fetches value of turn from turn input", function() {
+        expect(turnInlineInputStub.val).toHaveBeenCalled();
     });
 
-    it("calls score keeper to update turn score", function() {
-        expect(stubScoreKeeper.updateScoreTurn.calledWith(currentTurnScoreValue)).toBe(true);
+    it("then finds current score span", function () {
+        expect(jQuerySpy).toHaveBeenCalledWith("span.currentScoreValue", turnInlineInputStub);
     });
 
-    it("finds current score span", function() {
-        expect(jQuerySpy.calledWith("span.currentScoreValue", turnScoreCellSelectionResultStub)).toBe(true);
+    it("then shows score span again", function () {
+        expect(currentTurnScoreValueStub.show).toHaveBeenCalled();
     });
 
-    it("updates current score span with new score", function() {
-        expect(htmlStub.calledWith(currentTurnScoreValue)).toBe(true);
+    it("then updates current score span with new score", function () {
+         expect(currentTurnScoreValueStub.html).toHaveBeenCalledWith(currentTurnScoreValue);
+    }); 
+    
+    it("then removes score inline input from DOM", function() {
+        expect(turnInlineInputStub.remove).toHaveBeenCalled();
     });
-
-    it("shows score span again", function() {
-        expect(showStub.called).toBe(true);
+   
+    it("then calls score keeper to update turn score", function() {
+        expect(stubScoreKeeper.updateScoreTurn).toHaveBeenCalled();
     });
-
-    it("removes score inline input from DOM", function() {
-        expect(removeStub.called).toBe(true);
-    });
+   
 });
