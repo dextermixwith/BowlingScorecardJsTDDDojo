@@ -4,33 +4,51 @@ ScoreKeeper.prototype = {
     updateScoreTurn : function () {}    
 };
 
-var ScoreCard = function (scoreCardTableNode, injectedJQuery, injectedTurnScoreClickEventHandler,
-                            injectedTurnBlurHandler, injectedTurnKeydownHandler, scoreKeeper) {
-    this.CurrentTurn = 1;
+var TurnScoreUI = function (scoreCardTableNode, injectedJQuery, turnScoreBlurHandler, turnKeydownHandler) {
     this.$ = injectedJQuery || $;
-    this.turnScoreClickEventHandler = injectedTurnScoreClickEventHandler || this.turnScoreClickEventHandler ;
-    this.turnScoreBlurHandler = injectedTurnBlurHandler || this.turnScoreBlurHandler;
-    this.turnKeydownHandler = injectedTurnKeydownHandler || this.turnKeydownHandler;
-    this.scoreKeeper = scoreKeeper || new ScoreKeeper();
-
-    this.initialiseTable(scoreCardTableNode);
+    this.scoreCardTableNode = scoreCardTableNode;
+    this.turnScoreBlurHandler = turnScoreBlurHandler;
+    this.turnKeydownHandler = turnKeydownHandler;
 };
 
-ScoreCard.prototype = {
-    initialiseTable: function (scoreCardTableNode) {
-        this.$("td.turnScore", scoreCardTableNode).on("click", this.$.proxy(this.turnScoreClickEventHandler, this));
-    },
-
-    turnScoreClickEventHandler: function (event) {
-        var turnScore = this.$('span.currentScoreValue', event.currentTarget).html();
+TurnScoreUI.prototype = {
+    startTurn: function (turnScoreCurrentDOMTarget) {
+        var turnScoreCurrentDOMNode = this.$('span.currentScoreValue', turnScoreCurrentDOMTarget);
+        var turnScore = turnScoreCurrentDOMNode.html();
         var turnInlineInput = this.$('<input type="text" class="turnInput" maxlength="1" value="' + turnScore + '" />');
         var blurProxy = this.$.proxy(this.turnScoreBlurHandler, this);
         turnInlineInput.on("blur", blurProxy);
         var keyDownProxy = this.$.proxy(this.turnKeydownHandler, this);
         turnInlineInput.on("keydown", keyDownProxy);
-        this.$('span.currentScoreValue', event.currentTarget).hide();
-        this.$('span.currentScoreValue', event.currentTarget).after(turnInlineInput);
+        this.$('span.currentScoreValue', turnScoreCurrentDOMTarget).hide();
+        this.$('span.currentScoreValue', turnScoreCurrentDOMTarget).after(turnInlineInput);
         turnInlineInput.trigger("focus");
+    }
+};
+
+var ScoreCard = function (scoreCardTableNode, injectedJQuery, injectedTurnScoreClickEventHandler,
+                            injectedTurnBlurHandler, injectedTurnKeydownHandler, scoreKeeper, turnScoreUI) {
+    this.CurrentTurn = 1;
+    this.$ = injectedJQuery || $;
+    this.turnScoreClickEventHandler = injectedTurnScoreClickEventHandler || this.turnScoreClickEventHandler;
+    this.turnScoreBlurHandler = injectedTurnBlurHandler || this.turnScoreBlurHandler;
+    this.turnKeydownHandler = injectedTurnKeydownHandler || this.turnKeydownHandler;
+    this.scoreKeeper = scoreKeeper || new ScoreKeeper();
+    this.scoreCardTableNode = scoreCardTableNode;
+    this.turnScoreUI = turnScoreUI || new TurnScoreUI(scoreCardTableNode, this.$, this.turnScoreBlurHandler, this.turnKeydownHandler);
+};
+
+ScoreCard.prototype = {
+    initialiseTable: function () {
+        this.$("td.turnScore", this.scoreCardTableNode).on("click", this.$.proxy(this.turnScoreClickEventHandler, this));
+    },
+
+    handleTurnScoreClick: function (event) {
+        this.turnScoreUI.startTurn(event.currentTarget, this.scoreKeeper.updateScoreTurn);
+    },
+
+    turnScoreClickEventHandler: function (event) {
+        this.startTurnScoreEntry(event.currentTarget);
     },
 
     turnScoreBlurHandler: function (event) {

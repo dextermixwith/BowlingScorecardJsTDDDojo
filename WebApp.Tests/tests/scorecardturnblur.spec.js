@@ -40,9 +40,6 @@ describe("When a score card turn input is blurred", function () {
 
         jQuerySpy = jasmine.createSpy("jQuerySpy").andCallFake(
             function () {
-                if (arguments[0] == "td.turnScore") {
-                    return turnScoreCellSelectionResultStub;
-                }
                 if (arguments[0] == "span.currentScoreValue") {
                     return currentTurnScoreValueStub;
                 }
@@ -57,14 +54,9 @@ describe("When a score card turn input is blurred", function () {
 
         stubScoreKeeper = jasmine.createSpyObj("stubScoreKeeper", ["updateScoreTurn"]);
 
-        scorecard = new ScoreCard(scorecardTableNodeCollection, jQuerySpy, null, null, null, stubScoreKeeper).turnScoreBlurHandler(blurEvent);
+        (new ScoreCard(scorecardTableNodeCollection, jQuerySpy, null, null, null, stubScoreKeeper)).turnScoreBlurHandler(blurEvent);
     });
 
-    it("then finds the current turn score cells in the table", function () {
-        expect(jQuerySpy).toHaveBeenCalledWith("td.turnScore", scorecardTableNodeCollection);
-    });
-
-    
     it("then fetches value of turn from turn input", function() {
         expect(turnInlineInputStub.val).toHaveBeenCalled();
     });

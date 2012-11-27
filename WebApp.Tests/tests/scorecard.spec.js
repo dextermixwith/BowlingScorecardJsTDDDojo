@@ -16,11 +16,7 @@ describe("When a Score Card is Initialised", function () {
         jQuerySpy = jasmine.createSpy("").andReturn(turnScoreCellSelectionResultStub);
         jQuerySpy.proxy = jasmine.createSpy("proxy").andReturn(proxiedClickHandler);
         stubTurnScoreClickEventHandler = {};
-        scorecard = new ScoreCard(scorecardTableNodeCollection, jQuerySpy, stubTurnScoreClickEventHandler);
-    });
-    
-    it("then has the current turn set to 1", function () {
-        expect(scorecard.CurrentTurn).toEqual(1);
+        (new ScoreCard(scorecardTableNodeCollection, jQuerySpy, stubTurnScoreClickEventHandler)).initialiseTable();
     });
 
     it("then finds the current turn score cells in the table", function () {

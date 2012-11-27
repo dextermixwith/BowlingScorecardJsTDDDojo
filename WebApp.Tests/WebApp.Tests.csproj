@@ -52,6 +52,7 @@
     <Content Include="tests\scorecardturnblur.spec.js" />
     <Content Include="tests\scorecardturnclick.spec.js" />
     <Content Include="tests\scorecardturnkeydown.spec.js" />
+    <Content Include="tests\turnscoreui.spec.js" />
   </ItemGroup>
   <ItemGroup>
     <None Include="jasmine\MIT.LICENSE" />
