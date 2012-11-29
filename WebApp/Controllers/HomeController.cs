@@ -11,6 +11,11 @@ namespace WebApp.Controllers
             return View();
         }
 
+        public ActionResult ShowHide()
+        {
+            return View();
+        }
+
         public ActionResult About()
         {
             return View();

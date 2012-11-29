@@ -60,4 +60,12 @@
 				</tr>
 			</tbody>
 		</table>
-
+        
+        @section javascript
+        {
+            <script type="text/javascript" src="@Url.Content("~/assets/js/scorecard.js")"></script>
+            <script type="text/javascript">
+                var scorecard = new ScoreCard($('table.scorecardTable'));
+                scorecard.initialise();
+            </script>
+        }

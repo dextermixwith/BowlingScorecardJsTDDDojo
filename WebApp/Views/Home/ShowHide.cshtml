@@ -1,0 +1,36 @@
+﻿@{
+    ViewBag.Title = "Show/Hide Dojo";
+}
+
+<h2>Show/Hide Dojo</h2>
+
+<form class="form-horizontal">
+  <div class="control-group">
+    <label class="control-label" for="option1">Option 1</label>
+    <div class="controls">
+        <input type="radio" name="options" id="option1" value="option1"/>
+        <input type="text" name="optionvalue1" id="optionvalue1"/>
+    </div>
+  </div>
+  <div class="control-group">
+    <label class="control-label" for="option2">Option 2</label>
+    <div class="controls">
+        <input type="radio" name="options" id="option2" value="option2"/>
+        <input type="text" name="optionvalue2" id="optionvalue2"/>
+    </div>
+  </div>
+  <div class="control-group">
+    <div class="controls">
+      <button type="submit" class="btn">Sign in</button>
+    </div>
+  </div>
+</form>
+
+
+@section javascript
+{
+    <script type="text/javascript" src="@Url.Content("~/assets/js/showhide.js")"></script>
+    <script type="text/javascript">
+        new ShowHide().initialise();
+    </script>
+}
