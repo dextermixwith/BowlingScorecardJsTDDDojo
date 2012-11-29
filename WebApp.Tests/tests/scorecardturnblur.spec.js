@@ -20,6 +20,7 @@ var htmlStub;
 var currentTurnScoreValueStub;
 var inputParentStub;
 var proxiedClickHandler = function () { };
+var mockTurnScoreUI;
 
 describe("When a score card turn input is blurred", function () {
     beforeEach(function () {
@@ -54,31 +55,12 @@ describe("When a score card turn input is blurred", function () {
 
         stubScoreKeeper = jasmine.createSpyObj("stubScoreKeeper", ["updateScoreTurn"]);
 
-        (new ScoreCard(scorecardTableNodeCollection, jQuerySpy, null, null, null, stubScoreKeeper)).turnScoreBlurHandler(blurEvent);
+        mockTurnScoreUI = jasmine.createSpyObj("mockTurnScoreUI", ["finishTurn"]);
+
+        (new ScoreCard(scorecardTableNodeCollection, jQuerySpy, stubScoreKeeper, mockTurnScoreUI)).turnScoreBlurHandler(blurEvent);
     });
 
-    it("then fetches value of turn from turn input", function() {
-        expect(turnInlineInputStub.val).toHaveBeenCalled();
-    });
-
-    it("then finds current score span", function () {
-        expect(jQuerySpy).toHaveBeenCalledWith("span.currentScoreValue", turnInlineInputStub);
-    });
-
-    it("then shows score span again", function () {
-        expect(currentTurnScoreValueStub.show).toHaveBeenCalled();
-    });
-
-    it("then updates current score span with new score", function () {
-         expect(currentTurnScoreValueStub.html).toHaveBeenCalledWith(currentTurnScoreValue);
-    }); 
-    
-    it("then removes score inline input from DOM", function() {
-        expect(turnInlineInputStub.remove).toHaveBeenCalled();
-    });
-   
-    it("then calls score keeper to update turn score", function() {
-        expect(stubScoreKeeper.updateScoreTurn).toHaveBeenCalled();
-    });
-   
+    it("then starts the turn.", function () {
+        expect(mockTurnScoreUI.finishTurn).toHaveBeenCalledWith(scoreTurnInputStub, stubScoreKeeper.updateScoreTurn);
+    });   
 });

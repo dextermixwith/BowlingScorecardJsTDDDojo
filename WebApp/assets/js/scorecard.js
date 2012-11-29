@@ -1,7 +1,9 @@
 var ScoreKeeper = function() {};
 
 ScoreKeeper.prototype = {
-    updateScoreTurn : function () {}    
+    updateScoreTurn : function() {
+        
+    }    
 };
 
 var TurnScoreUI = function (scoreCardTableNode, injectedJQuery, turnScoreBlurHandler, turnKeydownHandler) {
@@ -23,49 +25,9 @@ TurnScoreUI.prototype = {
         this.$('span.currentScoreValue', turnScoreCurrentDOMTarget).hide();
         this.$('span.currentScoreValue', turnScoreCurrentDOMTarget).after(turnInlineInput);
         turnInlineInput.trigger("focus");
-    }
-};
-
-var ScoreCard = function (scoreCardTableNode, injectedJQuery, injectedTurnScoreClickEventHandler,
-                            injectedTurnBlurHandler, injectedTurnKeydownHandler, scoreKeeper, turnScoreUI) {
-    this.CurrentTurn = 1;
-    this.$ = injectedJQuery || $;
-    this.turnScoreClickEventHandler = injectedTurnScoreClickEventHandler || this.turnScoreClickEventHandler;
-    this.turnScoreBlurHandler = injectedTurnBlurHandler || this.turnScoreBlurHandler;
-    this.turnKeydownHandler = injectedTurnKeydownHandler || this.turnKeydownHandler;
-    this.scoreKeeper = scoreKeeper || new ScoreKeeper();
-    this.scoreCardTableNode = scoreCardTableNode;
-    this.turnScoreUI = turnScoreUI || new TurnScoreUI(scoreCardTableNode, this.$, this.turnScoreBlurHandler, this.turnKeydownHandler);
-};
-
-ScoreCard.prototype = {
-    initialiseTable: function () {
-        this.$("td.turnScore", this.scoreCardTableNode).on("click", this.$.proxy(this.turnScoreClickEventHandler, this));
     },
 
-    handleTurnScoreClick: function (event) {
-        this.turnScoreUI.startTurn(event.currentTarget, this.scoreKeeper.updateScoreTurn);
-    },
-
-    turnScoreClickEventHandler: function (event) {
-        this.startTurnScoreEntry(event.currentTarget);
-    },
-
-    turnScoreBlurHandler: function (event) {
-        var turnScore = this.finishTurnScoreEntry(event.currentTarget);
-        this.scoreKeeper.updateScoreTurn(turnScore);
-    },
-
-    turnKeydownHandler: function (event) {
-        if (event.which == 13) {
-            var turnScore = this.finishTurnScoreEntry(event.currentTarget);
-            this.scoreKeeper.updateScoreTurn(turnScore);
-        } else if (event.which == 27) {
-            this.cancelTurnScoreEntry(event.currentTarget);
-        };
-    },
-
-    finishTurnScoreEntry: function (turnScoreDOMInputNode) {
+    finishTurn: function (turnScoreDOMInputNode, turnScoreUpdateCallback) {
         var turnInlineInput = this.$(turnScoreDOMInputNode);
         var turnScore = turnInlineInput.val();
         var turnCell = turnInlineInput.parent();
@@ -74,13 +36,41 @@ ScoreCard.prototype = {
         currentScoreSpan.show();
         currentScoreSpan.html(turnScore);
         turnInlineInput.remove();
-        return turnScore;
+        turnScoreUpdateCallback(turnScore);
     },
-
-    cancelTurnScoreEntry: function (turnScoreDOMInputNode) {
+    cancelTurn: function (turnScoreDOMInputNode) {
         var turnInlineInput = this.$(turnScoreDOMInputNode);
         var turnCell = turnInlineInput.parent();
         this.$('span.currentScoreValue', turnCell).show();
         turnInlineInput.remove();
+    }
+};
+
+var ScoreCard = function (scoreCardTableNode, injectedJQuery, scoreKeeper, turnScoreUI) {
+    this.$ = injectedJQuery || $;
+    this.scoreKeeper = scoreKeeper || new ScoreKeeper();
+    this.scoreCardTableNode = scoreCardTableNode;
+    this.turnScoreUI = turnScoreUI || new TurnScoreUI(scoreCardTableNode, this.$, this.turnScoreBlurHandler, this.turnKeydownHandler);
+};
+
+ScoreCard.prototype = {
+    initialise: function () {
+        this.$("td.turnScore", this.scoreCardTableNode).on("click", this.$.proxy(this.handleTurnScoreClick, this));
+    },
+
+    handleTurnScoreClick: function (event) {
+        this.turnScoreUI.startTurn(event.currentTarget, this.scoreKeeper.updateScoreTurn);
+    },
+
+    turnScoreBlurHandler: function (event) {
+        this.turnScoreUI.finishTurn(event.currentTarget, this.scoreKeeper.updateScoreTurn);
+    },
+
+    turnKeydownHandler: function (event) {
+        if (event.which == 13) {
+            this.turnScoreUI.finishTurn(event.currentTarget, this.scoreKeeper.updateScoreTurn);
+        } else if (event.which == 27) {
+            this.turnScoreUI.cancelTurn(event.currentTarget);
+        };
     }
 };

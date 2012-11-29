@@ -39,7 +39,7 @@ describe("When the turn score cell is clicked", function () {
 
         mockScoreKeeper = { updateScoreTurn: function () { } };
 
-        (new ScoreCard(scorecardTableNodeCollection, jQuerySpy, null, null, null, mockScoreKeeper, mockTurnScoreUI)).handleTurnScoreClick(clickEvent);
+        (new ScoreCard(scorecardTableNodeCollection, jQuerySpy, mockScoreKeeper, mockTurnScoreUI)).handleTurnScoreClick(clickEvent);
 
     });
 
