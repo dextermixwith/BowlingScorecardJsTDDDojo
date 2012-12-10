@@ -11,10 +11,10 @@ describe("Turn score UI Specs", function () {
     var currentTurnScoreValue;
     var currentTurnCellStub;
     var turnInlineInputStub;
-    var stubTurnScoreBlurEventHandler;
+    var stubTurnScoreBlurCallback;
     var proxiedTurnBlurHandler = {};
     var proxiedTurnKeydownHandler = {};
-    var stubTurnScoreKeydownEventHandler;
+    var stubTurnScoreKeydownCallback;
 
     describe("When a score turn is started", function () {
         beforeEach(function () {
@@ -35,15 +35,15 @@ describe("Turn score UI Specs", function () {
                 return null;
             });
 
-            stubTurnScoreBlurEventHandler = {};
-            stubTurnScoreKeydownEventHandler = {};
+            stubTurnScoreBlurCallback = function() {};
+            stubTurnScoreKeydownCallback = function() {};
 
             jQuerySpy.proxy = jasmine.createSpy("proxy").andCallFake(
             function () {
-                if (arguments[0] == stubTurnScoreBlurEventHandler) {
+                if (arguments[0] == stubTurnScoreBlurCallback) {
                     return proxiedTurnBlurHandler;
                 }
-                if (arguments[0] == stubTurnScoreKeydownEventHandler) {
+                if (arguments[0] == stubTurnScoreKeydownCallback) {
                     return proxiedTurnKeydownHandler;
                 }
                 return null;
@@ -52,8 +52,8 @@ describe("Turn score UI Specs", function () {
 
             jQuerySpy.on = jasmine.createSpy("on");
 
-            turnscoreUI = new TurnScoreUI(scorecardTableNodeCollection, jQuerySpy, stubTurnScoreBlurEventHandler, stubTurnScoreKeydownEventHandler);
-            turnscoreUI.startTurn(currentTurnCellStub);
+            turnscoreUI = new TurnScoreUI(scorecardTableNodeCollection, jQuerySpy);
+            turnscoreUI.startTurn(currentTurnCellStub, stubTurnScoreBlurCallback, stubTurnScoreKeydownCallback);
         });
 
         it("then finds current turn cell is using jQuery", function () {
@@ -89,7 +89,7 @@ describe("Turn score UI Specs", function () {
         });
 
         it("then proxies the input blur handler", function () {
-            expect(jQuerySpy.proxy).toHaveBeenCalledWith(stubTurnScoreBlurEventHandler, turnscoreUI);
+            expect(jQuerySpy.proxy).toHaveBeenCalledWith(stubTurnScoreBlurCallback, turnscoreUI);
         });
 
 
@@ -136,7 +136,7 @@ describe("Turn score UI Specs", function () {
 
             updateScoreCallbackSpy = jasmine.createSpy("updateScoreCallback");
 
-            turnscoreUI = new TurnScoreUI(scorecardTableNodeCollection, jQuerySpy, stubTurnScoreBlurEventHandler, stubTurnScoreKeydownEventHandler);
+            turnscoreUI = new TurnScoreUI(scorecardTableNodeCollection, jQuerySpy, stubTurnScoreBlurCallback, stubTurnScoreKeydownCallback);
             turnscoreUI.finishTurn(scoreTurnInputStub, updateScoreCallbackSpy);
 
         });

@@ -49,9 +49,6 @@
     <Content Include="jasmine\jasmine.js" />
     <Content Include="jasmine\JasmineAdapter.js" />
     <Content Include="tests\scorecard.spec.js" />
-    <Content Include="tests\scorecardturnblur.spec.js" />
-    <Content Include="tests\scorecardturnclick.spec.js" />
-    <Content Include="tests\scorecardturnkeydown.spec.js" />
     <Content Include="tests\showhide.spec.js" />
     <Content Include="tests\turnscoreui.spec.js" />
   </ItemGroup>

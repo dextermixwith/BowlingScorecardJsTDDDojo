@@ -14,13 +14,13 @@ var TurnScoreUI = function (scoreCardTableNode, injectedJQuery, turnScoreBlurHan
 };
 
 TurnScoreUI.prototype = {
-    startTurn: function (turnScoreCurrentDOMTarget) {
+    startTurn: function (turnScoreCurrentDOMTarget, turnBlurCallback, turnKeydownCallback) {
         var turnScoreCurrentDOMNode = this.$('span.currentScoreValue', turnScoreCurrentDOMTarget);
         var turnScore = turnScoreCurrentDOMNode.html();
         var turnInlineInput = this.$('<input type="text" class="turnInput" maxlength="1" value="' + turnScore + '" />');
-        var blurProxy = this.$.proxy(this.turnScoreBlurHandler, this);
+        var blurProxy = this.$.proxy(turnBlurCallback, this);
         turnInlineInput.on("blur", blurProxy);
-        var keyDownProxy = this.$.proxy(this.turnKeydownHandler, this);
+        var keyDownProxy = this.$.proxy(turnKeydownCallback, this);
         turnInlineInput.on("keydown", keyDownProxy);
         this.$('span.currentScoreValue', turnScoreCurrentDOMTarget).hide();
         this.$('span.currentScoreValue', turnScoreCurrentDOMTarget).after(turnInlineInput);
@@ -50,7 +50,7 @@ var ScoreCard = function (scoreCardTableNode, injectedJQuery, scoreKeeper, turnS
     this.$ = injectedJQuery || $;
     this.scoreKeeper = scoreKeeper || new ScoreKeeper();
     this.scoreCardTableNode = scoreCardTableNode;
-    this.turnScoreUI = turnScoreUI || new TurnScoreUI(scoreCardTableNode, this.$, this.turnScoreBlurHandler, this.turnKeydownHandler);
+    this.turnScoreUI = turnScoreUI || new TurnScoreUI(scoreCardTableNode, this.$);
 };
 
 ScoreCard.prototype = {
@@ -59,7 +59,7 @@ ScoreCard.prototype = {
     },
 
     handleTurnScoreClick: function (event) {
-        this.turnScoreUI.startTurn(event.currentTarget, this.scoreKeeper.updateScoreTurn);
+        this.turnScoreUI.startTurn(event.currentTarget, this.$.proxy(this.turnScoreBlurHandler, this), this.$.proxy(this.turnKeydownHandler, this));
     },
 
     turnScoreBlurHandler: function (event) {
